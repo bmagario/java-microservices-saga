@@ -2,7 +2,7 @@ package com.bmagario.saga.order.server.domain.valueobject;
 
 import java.util.Objects;
 
-abstract class BaseId<T> {
+public abstract class BaseId<T> {
     private final T value;
 
     protected BaseId(T value) {

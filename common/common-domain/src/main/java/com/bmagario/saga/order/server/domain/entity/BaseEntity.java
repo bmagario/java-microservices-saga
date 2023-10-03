@@ -2,7 +2,7 @@ package com.bmagario.saga.order.server.domain.entity;
 
 import java.util.Objects;
 
-abstract class BaseEntity<ID> {
+public abstract class BaseEntity<ID> {
     private ID id;
 
     public ID getId() {
