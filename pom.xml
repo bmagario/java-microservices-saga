@@ -7,7 +7,7 @@
     <modules>
         <module>order-service</module>
         <module>common</module>
-        <module>common/common-domain</module>
+        <module>infrastructure</module>
     </modules>
 
     <parent>
@@ -25,6 +25,9 @@
     <properties>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <mockito-core.version>5.3.1</mockito-core.version>
+        <spring-kafka.version>3.0.9</spring-kafka.version>
+        <kafka-avro-serializer.version>7.0.1</kafka-avro-serializer.version>
+        <avro.version>1.11.2</avro.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -58,6 +61,26 @@
             <dependency>
                 <groupId>com.bmagario.saga</groupId>
                 <artifactId>common-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bmagario.saga</groupId>
+                <artifactId>kafka-producer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bmagario.saga</groupId>
+                <artifactId>kafka-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bmagario.saga</groupId>
+                <artifactId>kafka-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bmagario.saga</groupId>
+                <artifactId>kafka-config-data</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
