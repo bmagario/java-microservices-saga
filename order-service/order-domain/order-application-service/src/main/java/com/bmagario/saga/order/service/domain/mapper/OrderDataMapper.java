@@ -8,7 +8,7 @@ import com.bmagario.saga.order.service.domain.entity.Order;
 import com.bmagario.saga.order.service.domain.entity.OrderItem;
 import com.bmagario.saga.order.service.domain.entity.Product;
 import com.bmagario.saga.order.service.domain.entity.Restaurant;
-import com.bmagario.saga.order.service.domain.valueobject.CustomertId;
+import com.bmagario.saga.order.service.domain.valueobject.CustomerId;
 import com.bmagario.saga.order.service.domain.valueobject.Money;
 import com.bmagario.saga.order.service.domain.valueobject.ProductId;
 import com.bmagario.saga.order.service.domain.valueobject.RestaurantId;
@@ -32,7 +32,7 @@ public class OrderDataMapper {
 
     public Order createOrderCommandToOrder(CreateOrderCommand createOrderCommand) {
         return Order.builder()
-                .customertId(new CustomertId(createOrderCommand.getCustomerId()))
+                .customerId(new CustomerId(createOrderCommand.getCustomerId()))
                 .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))
                 .deliveryAddress(
                         orderAddressToStreetAddress(createOrderCommand.getAddress()))
@@ -53,7 +53,7 @@ public class OrderDataMapper {
         return TrackOrderResponse.builder()
                 .orderTrackingId(order.getTrackingId().getValue())
                 .orderStatus(order.getOrderStatus())
-                .failureMessages(order.getFailureMeesages())
+                .failureMessages(order.getFailureMessages())
                 .build();
     }
 

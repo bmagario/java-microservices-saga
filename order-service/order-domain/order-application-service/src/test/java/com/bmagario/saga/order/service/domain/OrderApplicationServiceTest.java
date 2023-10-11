@@ -14,7 +14,7 @@ import com.bmagario.saga.order.service.domain.ports.input.service.OrderApplicati
 import com.bmagario.saga.order.service.domain.ports.output.repository.CustomerRepository;
 import com.bmagario.saga.order.service.domain.ports.output.repository.OrderRepository;
 import com.bmagario.saga.order.service.domain.ports.output.repository.RestaurantRepository;
-import com.bmagario.saga.order.service.domain.valueobject.CustomertId;
+import com.bmagario.saga.order.service.domain.valueobject.CustomerId;
 import com.bmagario.saga.order.service.domain.valueobject.Money;
 import com.bmagario.saga.order.service.domain.valueobject.OrderId;
 import com.bmagario.saga.order.service.domain.valueobject.OrderStatus;
@@ -135,7 +135,7 @@ public class OrderApplicationServiceTest {
                 .build();
 
         Customer customer = new Customer();
-        customer.setId(new CustomertId(CUSTOMER_ID));
+        customer.setId(new CustomerId(CUSTOMER_ID));
 
         Restaurant restaurant = Restaurant.builder()
                 .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))

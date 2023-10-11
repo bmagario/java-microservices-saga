@@ -1,7 +1,7 @@
 package com.bmagario.saga.order.service.domain.entity;
 
 import com.bmagario.saga.order.service.domain.exception.OrderDomainException;
-import com.bmagario.saga.order.service.domain.valueobject.CustomertId;
+import com.bmagario.saga.order.service.domain.valueobject.CustomerId;
 import com.bmagario.saga.order.service.domain.valueobject.Money;
 import com.bmagario.saga.order.service.domain.valueobject.OrderId;
 import com.bmagario.saga.order.service.domain.valueobject.OrderItemId;
@@ -13,14 +13,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class Order extends AggregateRoot<OrderId> {
-    private final CustomertId customertId;
+    private final CustomerId CustomerId;
     private final RestaurantId restaurantId;
     private final StreetAddress deliveryAddress;
     private final Money price;
     private final List<OrderItem> items;
     private TrackingId trackingId;
     private OrderStatus orderStatus;
-    private List<String> failureMeesages;
+    private List<String> failureMessages;
+    public static final String FAILURE_MESSAGE_DELIMITER = ",";
 
     public void initializeOrder() {
         setId(new OrderId(UUID.randomUUID()));
@@ -49,32 +50,32 @@ public class Order extends AggregateRoot<OrderId> {
         orderStatus = OrderStatus.APPROVED;
     }
 
-    public void initCancel(List<String> failureMeesages) {
+    public void initCancel(List<String> failureMessages) {
         if (orderStatus != OrderStatus.PAID) {
             throw new OrderDomainException(
                     "Order is not in correct state for initCancel operation!");
         }
         orderStatus = OrderStatus.CANCELLING;
-        updateFailureMessages(failureMeesages);
+        updateFailureMessages(failureMessages);
     }
 
-    public void cancel(List<String> failureMeesages) {
+    public void cancel(List<String> failureMessages) {
         if (!(orderStatus == OrderStatus.PENDING || orderStatus == OrderStatus.CANCELLING)) {
             throw new OrderDomainException(
                     "Order is not in correct state for cancel operation!");
         }
         orderStatus = OrderStatus.CANCELLED;
-        updateFailureMessages(failureMeesages);
+        updateFailureMessages(failureMessages);
     }
 
-    private void updateFailureMessages(List<String> failureMeesages) {
-        if (this.failureMeesages != null && failureMeesages != null) {
-            this.failureMeesages.addAll(
-                    failureMeesages.stream().filter(message -> message.isEmpty()).toList());
+    private void updateFailureMessages(List<String> failureMessages) {
+        if (this.failureMessages != null && failureMessages != null) {
+            this.failureMessages.addAll(
+                    failureMessages.stream().filter(String::isEmpty).toList());
         }
-        if (this.failureMeesages == null) {
-            this.failureMeesages =
-                    failureMeesages.stream().filter(message -> message.isEmpty()).toList();
+        if (this.failureMessages == null) {
+            this.failureMessages =
+                    failureMessages.stream().filter(String::isEmpty).toList();
         }
     }
 
@@ -121,19 +122,19 @@ public class Order extends AggregateRoot<OrderId> {
 
     private Order(Builder builder) {
         super.setId(builder.orderId);
-        customertId = builder.customertId;
+        CustomerId = builder.CustomerId;
         restaurantId = builder.restaurantId;
         deliveryAddress = builder.deliveryAddress;
         price = builder.price;
         items = builder.items;
         trackingId = builder.trackingId;
         orderStatus = builder.orderStatus;
-        failureMeesages = builder.failureMeesages;
+        failureMessages = builder.failureMessages;
     }
 
 
-    public CustomertId getCustomertId() {
-        return customertId;
+    public CustomerId getCustomerId() {
+        return CustomerId;
     }
 
     public RestaurantId getRestaurantId() {
@@ -160,25 +161,25 @@ public class Order extends AggregateRoot<OrderId> {
         return orderStatus;
     }
 
-    public List<String> getFailureMeesages() {
-        return failureMeesages;
+    public List<String> getFailureMessages() {
+        return failureMessages;
     }
 
     public static Builder builder() {
         return new Builder();
     }
-    
+
 
     public static final class Builder {
         private OrderId orderId;
-        private CustomertId customertId;
+        private CustomerId CustomerId;
         private RestaurantId restaurantId;
         private StreetAddress deliveryAddress;
         private Money price;
         private List<OrderItem> items;
         private TrackingId trackingId;
         private OrderStatus orderStatus;
-        private List<String> failureMeesages;
+        private List<String> failureMessages;
 
         private Builder() {
         }
@@ -188,8 +189,8 @@ public class Order extends AggregateRoot<OrderId> {
             return this;
         }
 
-        public Builder customertId(CustomertId val) {
-            customertId = val;
+        public Builder customerId(CustomerId val) {
+            CustomerId = val;
             return this;
         }
 
@@ -223,8 +224,8 @@ public class Order extends AggregateRoot<OrderId> {
             return this;
         }
 
-        public Builder failureMeesages(List<String> val) {
-            failureMeesages = val;
+        public Builder failureMessages(List<String> val) {
+            failureMessages = val;
             return this;
         }
 
