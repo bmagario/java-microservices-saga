@@ -1,7 +1,7 @@
 package com.bmagario.saga.kafka.consumer.config;
 
-import com.food.ordering.system.kafka.config.data.KafkaConfigData;
-import com.food.ordering.system.kafka.config.data.KafkaConsumerConfigData;
+import com.bmagario.saga.config.data.KafkaConfigData;
+import com.bmagario.saga.config.data.KafkaConsumerConfigData;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
