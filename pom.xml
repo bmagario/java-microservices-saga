@@ -8,6 +8,8 @@
         <module>order-service</module>
         <module>common</module>
         <module>infrastructure</module>
+        <module>saga</module>
+        <module>customer-service</module>
     </modules>
 
     <parent>
