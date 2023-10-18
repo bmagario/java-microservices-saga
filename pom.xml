@@ -8,7 +8,6 @@
         <module>order-service</module>
         <module>common</module>
         <module>infrastructure</module>
-        <module>common/common-dataaccess</module>
     </modules>
 
     <parent>
