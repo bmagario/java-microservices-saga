@@ -4,6 +4,7 @@ import com.bmagario.saga.order.service.dataaccess.order.mapper.OrderDataAccessMa
 import com.bmagario.saga.order.service.dataaccess.order.repository.OrderJpaRepository;
 import com.bmagario.saga.order.service.domain.entity.Order;
 import com.bmagario.saga.order.service.domain.ports.output.repository.OrderRepository;
+import com.bmagario.saga.order.service.domain.valueobject.OrderId;
 import com.bmagario.saga.order.service.domain.valueobject.TrackingId;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Optional<Order> findByTrackingId(TrackingId trackingId) {
         return orderJpaRepository.findByTrackingId(trackingId.getValue())
+                .map(orderDataAccessMapper::orderEntityToOrder);
+    }
+
+    @Override
+    public Optional<Order> findById(OrderId orderId) {
+        return orderJpaRepository.findById(orderId.getValue())
                 .map(orderDataAccessMapper::orderEntityToOrder);
     }
 }
