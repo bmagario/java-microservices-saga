@@ -4,13 +4,8 @@ import com.bmagario.saga.order.service.domain.dto.message.PaymentResponse;
 import com.bmagario.saga.order.service.domain.entity.Order;
 import com.bmagario.saga.order.service.domain.event.EmptyEvent;
 import com.bmagario.saga.order.service.domain.event.OrderPaidEvent;
-import com.bmagario.saga.order.service.domain.exception.OrderNotFoundException;
 import com.bmagario.saga.order.service.domain.ports.output.message.publisher.approval.OrderPaidRestaurantRequestMessagePublisher;
-import com.bmagario.saga.order.service.domain.ports.output.repository.OrderRepository;
-import com.bmagario.saga.order.service.domain.valueobject.OrderId;
 import com.bmagario.saga.saga.SagaStep;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderPaymentSaga implements SagaStep<PaymentResponse, OrderPaidEvent, EmptyEvent> {
 
     private final OrderDomainService orderDomainService;
-    private final OrderRepository orderRepository;
+    private final OrderSagaHelper orderSagaHelper;
     private final OrderPaidRestaurantRequestMessagePublisher
             orderPaidRestaurantRequestMessagePublisher;
 
-    public OrderPaymentSaga(OrderDomainService orderDomainService, OrderRepository orderRepository,
+    public OrderPaymentSaga(OrderDomainService orderDomainService,
+                            OrderSagaHelper orderSagaHelper,
                             OrderPaidRestaurantRequestMessagePublisher orderPaidRestaurantRequestMessagePublisher) {
         this.orderDomainService = orderDomainService;
-        this.orderRepository = orderRepository;
+        this.orderSagaHelper = orderSagaHelper;
         this.orderPaidRestaurantRequestMessagePublisher =
                 orderPaidRestaurantRequestMessagePublisher;
     }
@@ -36,10 +32,10 @@ public class OrderPaymentSaga implements SagaStep<PaymentResponse, OrderPaidEven
     @Transactional
     public OrderPaidEvent process(PaymentResponse paymentResponse) {
         log.info("Completing payment for order with id: {}", paymentResponse.getOrderId());
-        Order order = findOrder(paymentResponse.getOrderId());
+        Order order = orderSagaHelper.findOrder(paymentResponse.getOrderId());
         OrderPaidEvent orderPaidEvent =
                 orderDomainService.payOrder(order, orderPaidRestaurantRequestMessagePublisher);
-        orderRepository.save(order);
+        orderSagaHelper.saveOrder(order);
         log.info("Order with id: {} is paid!", order.getId().getValue());
         return orderPaidEvent;
     }
@@ -48,19 +44,10 @@ public class OrderPaymentSaga implements SagaStep<PaymentResponse, OrderPaidEven
     @Transactional
     public EmptyEvent rollback(PaymentResponse paymentResponse) {
         log.info("Completing payment for order with id: {}", paymentResponse.getOrderId());
-        Order order = findOrder(paymentResponse.getOrderId());
+        Order order = orderSagaHelper.findOrder(paymentResponse.getOrderId());
         orderDomainService.cancelOrder(order, paymentResponse.getFailureMessages());
-        orderRepository.save(order);
+        orderSagaHelper.saveOrder(order);
         log.info("Order with id: {} is cancelled!", order.getId().getValue());
         return EmptyEvent.INSTANCE;
-    }
-
-    private Order findOrder(String orderId) {
-        Optional<Order> orderResponse =
-                orderRepository.findById(new OrderId(UUID.fromString(orderId)));
-        return orderResponse.orElseThrow(() -> {
-            log.error("Order with id: {} could not be found!", orderId);
-            throw new OrderNotFoundException("Order with id: " + orderId + " could not be found!");
-        });
     }
 }
