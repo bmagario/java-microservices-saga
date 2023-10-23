@@ -1,5 +1,5 @@
 {
-    "namespace": "com.bmagario.saga.kafka.order.avro.model",
+    "namespace": "com.food.order.system.kafka.order.avro.model",
     "type": "record",
     "name": "PaymentRequestAvroModel",
     "fields": [

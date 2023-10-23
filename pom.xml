@@ -2,103 +2,234 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>2.6.7</version>
+        <relativePath/>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <modules>
         <module>order-service</module>
         <module>common</module>
         <module>infrastructure</module>
-        <module>saga</module>
+        <module>infrastructure/kafka</module>
         <module>customer-service</module>
+        <module>payment-service</module>
+        <module>restaurant-service</module>
     </modules>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.3</version>
-        <relativePath/>
-    </parent>
 
-    <groupId>com.bmagario.saga</groupId>
-    <artifactId>java-microservices-saga</artifactId>
+    <groupId>com.food.order</groupId>
+    <artifactId>food-ordering-system</artifactId>
     <version>1.0-SNAPSHOT</version>
+
     <packaging>pom</packaging>
 
     <properties>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <mockito-core.version>5.3.1</mockito-core.version>
-        <spring-kafka.version>3.0.9</spring-kafka.version>
-        <kafka-avro-serializer.version>7.0.1</kafka-avro-serializer.version>
-        <avro.version>1.11.2</avro.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-compiler-plugin.version>3.9.0</maven-compiler-plugin.version>
+        <mockito.version>4.3.1</mockito.version>
+        <spring-kafka.version>2.8.2</spring-kafka.version>
+        <kavka-avro.serializer.version>7.0.1</kavka-avro.serializer.version>
+        <avro.version>1.11.0</avro.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
+                <groupId>com.food.order</groupId>
+                <artifactId>order-core-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>outbox</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>customer-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>customer-service-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>customer-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>customer-data-access</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>customer-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>payment-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>order-app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>payment-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
                 <artifactId>saga</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
-                <artifactId>order-domain-core</artifactId>
+                <groupId>com.food.order</groupId>
+                <artifactId>payment-domain-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
+                <groupId>com.food.order</groupId>
+                <artifactId>payment-dataaccess</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>payment-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.food.order</groupId>
                 <artifactId>order-application-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
+                <groupId>com.food.order</groupId>
                 <artifactId>order-application</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
-                <artifactId>order-dataaccess</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.bmagario.saga</groupId>
-                <artifactId>order-messaging</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.bmagario.saga</groupId>
-                <artifactId>common-domain</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.bmagario.saga</groupId>
+                <groupId>com.food.order</groupId>
                 <artifactId>common-application</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
+                <groupId>com.food.order</groupId>
                 <artifactId>kafka-producer</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
+                <groupId>com.food.order</groupId>
+                <artifactId>restaurant-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>common-data-access</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>restaurant-dataaccess</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>restaurant-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>restaurant-core-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>restaurant-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.food.order</groupId>
                 <artifactId>kafka-consumer</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
+                <groupId>com.food.order</groupId>
                 <artifactId>kafka-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.bmagario.saga</groupId>
-                <artifactId>kafka-config-data</artifactId>
+                <groupId>com.food.order</groupId>
+                <artifactId>kafka-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>order-data-access</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>common-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.food.order</groupId>
+                <artifactId>order-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>${mockito-core.version}</version>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -110,22 +241,43 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
     </dependencies>
 
+
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.ferstl</groupId>
+                <artifactId>depgraph-maven-plugin</artifactId>
+                <version>4.0.1</version>
+                <configuration>
+                    <scope>compile</scope>
+                    <graphFormat>puml</graphFormat>
+                    <createImage>true</createImage>
+                    <excludes>
+                        <exclude>org.slf4j:slf4j-api</exclude>
+                        <exclude>com.google.guava:guava</exclude>
+                        <exclude>io.vavr:vavr</exclude>
+                    </excludes>
+                    <transitiveExcludes>
+                        <transitiveExclude>*</transitiveExclude>
+                    </transitiveExcludes>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

@@ -1,5 +1,5 @@
 version: '3.7'
 
 networks:
-  bmagario-saga:
+  food-order-system:
     driver: bridge
